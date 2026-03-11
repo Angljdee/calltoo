@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CALLTOO — L'expert dont tu as besoin, maintenant</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F0EEF8;
+    --dark: #0D0B1F;
+    --orange: #C9A84C;
+    --orange2: #E8C97A;
+    --green: #00C97A;
+    --blue: #2A1F6E;
+    --muted: #7A7890;
+    --border: rgba(13,11,31,0.08);
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* =================== NAV =================== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    padding: 18px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(247,243,237,0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    color: var(--dark);
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--orange); }
+
+  .nav-center {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-center a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-center a:hover { color: var(--dark); }
+
+  .nav-right { display: flex; gap: 12px; align-items: center; }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--dark);
+    padding: 9px 22px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+
+  .btn-ghost:hover { border-color: var(--dark); }
+
+  .btn-orange {
+    background: var(--orange);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-orange:hover {
+    background: var(--dark);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.3);
+  }
+
+  /* =================== HERO =================== */
+  .hero {
+    min-height: 100vh;
+    padding: 130px 56px 80px;
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .hero-left { animation: fadeUp 0.7s ease both; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid var(--border);
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  .dot-green {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 2s infinite;
+    flex-shrink: 0;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(46px, 4.5vw, 68px);
+    line-height: 1.06;
+    letter-spacing: -2.5px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 .highlight {
+    color: var(--orange);
+    position: relative;
+    display: inline-block;
+  }
+
+  .hero h1 .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0; right: 0;
+    height: 5px;
+    background: var(--orange);
+    opacity: 0.2;
+    border-radius: 3px;
+  }
+
+  .hero-desc {
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 500px;
+    margin-bottom: 44px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 56px;
+    flex-wrap: wrap;
+  }
+
+  .btn-main {
+    background: var(--orange);
+    color: white;
+    padding: 16px 38px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .btn-main:hover {
+    background: var(--dark);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 48px rgba(201,168,76,0.25);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--dark);
+    padding: 16px 38px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 500;
+    border: 1.5px solid rgba(22,20,18,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-outline:hover { border-color: var(--dark); transform: translateY(-2px); }
+
+  .hero-trust {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .avatars-stack {
+    display: flex;
+  }
+
+  .avatars-stack .av {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--cream);
+    margin-right: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    background: white;
+  }
+
+  /* =================== HERO VISUAL =================== */
+  .hero-right {
+    animation: fadeUp 0.7s 0.15s ease both;
+    position: relative;
+  }
+
+  .main-card {
+    background: var(--dark);
+    border-radius: 28px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 48px 120px rgba(22,20,18,0.22), 0 8px 32px rgba(22,20,18,0.1);
+    max-width: 360px;
+    margin: 0 auto;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .card-top {
+    background: linear-gradient(135deg, #13103A, #1E1952);
+    padding: 20px 20px 0;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .expert-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .expert-av {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), #E8C97A);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .expert-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .expert-job {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2px;
+  }
+
+  .live-pill {
+    background: rgba(0,201,122,0.18);
+    color: var(--green);
+    border: 1px solid rgba(0,201,122,0.3);
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .live-pill::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
+  }
+
+  /* FAKE VIDEO */
+  .fake-video {
+    background: #080619;
+    border-radius: 12px 12px 0 0;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fake-video::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(26,111,255,0.06) 0%, transparent 60%);
+  }
+
+  .video-user {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1E1952, #2A2468);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pulse-ring {
+    position: absolute;
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--green);
+    animation: pulse-ring 2s ease-out infinite;
+  }
+
+  .pulse-ring:nth-child(2) { animation-delay: 0.7s; }
+
+  .small-cam {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--orange), #E8C97A);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+
+  /* CARD BOTTOM */
+  .card-bottom {
+    background: #0f0d2a;
+    padding: 16px 20px 20px;
+  }
+
+  .timer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .timer {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 2px;
+  }
+
+  .price-badge {
+    background: rgba(201,168,76,0.15);
+    color: #E8C97A;
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .ctrl-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .ctrl-mute { background: rgba(255,255,255,0.08); }
+  .ctrl-end { background: #FF3B30; }
+  .ctrl-cam { background: rgba(255,255,255,0.08); }
+  .ctrl-btn:hover { transform: scale(1.1); }
+
+  /* FLOATING CARDS */
+  .float-card {
+    position: absolute;
+    background: white;
+    border-radius: 16px;
+    padding: 14px 18px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    font-size: 13px;
+    animation: float 5s ease-in-out infinite;
+  }
+
+  .float-card-1 {
+    top: -20px;
+    right: -30px;
+    animation-delay: -2s;
+    max-width: 180px;
+  }
+
+  .float-card-2 {
+    bottom: 40px;
+    left: -40px;
+    animation-delay: -1s;
+    max-width: 200px;
+  }
+
+  .fc-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+  }
+
+  .fc-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--dark);
+  }
+
+  .fc-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .stars { color: #C9A84C; font-size: 12px; letter-spacing: 1px; }
+
+  /* =================== SECTION COMMENT ÇA MARCHE =================== */
+  .section {
+    padding: 100px 56px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--orange);
+    margin-bottom: 20px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: var(--orange);
+    border-radius: 2px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 3vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 17px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+
+  /* STEPS */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .step-card {
+    background: white;
+    border-radius: 24px;
+    padding: 36px 32px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .step-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange), #E8C97A);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .step-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.08); }
+  .step-card:hover::before { transform: scaleX(1); }
+
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    color: rgba(22,20,18,0.05);
+    line-height: 1;
+    margin-bottom: 16px;
+    letter-spacing: -4px;
+  }
+
+  .step-icon {
+    width: 52px; height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+
+  .step-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* =================== CATÉGORIES =================== */
+  .cats-section {
+    background: var(--dark);
+    padding: 100px 56px;
+  }
+
+  .cats-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .cats-section .section-label { color: #E8C97A; }
+  .cats-section .section-label::before { background: #E8C97A; }
+  .cats-section .section-title { color: white; }
+  .cats-section .section-sub { color: rgba(255,255,255,0.4); }
+
+  .cats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .cat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 28px 24px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .cat-card:nth-child(1)::after { background: linear-gradient(135deg, rgba(201,168,76,0.12), transparent); }
+  .cat-card:nth-child(2)::after { background: linear-gradient(135deg, rgba(0,201,122,0.12), transparent); }
+  .cat-card:nth-child(3)::after { background: linear-gradient(135deg, rgba(26,111,255,0.12), transparent); }
+  .cat-card:nth-child(4)::after { background: linear-gradient(135deg, rgba(201,168,76,0.12), transparent); }
+
+  .cat-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-4px); }
+  .cat-card:hover::after { opacity: 1; }
+
+  .cat-emoji { font-size: 36px; margin-bottom: 16px; }
+
+  .cat-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .cat-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .cat-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .cat-price .from { font-size: 11px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; }
+  .cat-price .amount {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: white;
+  }
+  .cat-price .per { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+  /* =================== POUR LES EXPERTS =================== */
+  .experts-section {
+    padding: 100px 56px;
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .earnings-card {
+    background: white;
+    border-radius: 28px;
+    padding: 36px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+  }
+
+  .earnings-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .earnings-big {
+    font-family: 'Syne', sans-serif;
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--dark), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .earnings-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-weight: 300;
+  }
+
+  .sessions-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .session-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--cream);
+    border-radius: 14px;
+    animation: slideIn 0.5s ease both;
+  }
+
+  .session-row:nth-child(2) { animation-delay: 0.1s; }
+  .session-row:nth-child(3) { animation-delay: 0.2s; }
+
+  .s-av {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    background: white;
+  }
+
+  .s-info { flex: 1; }
+  .s-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .s-time { font-size: 12px; color: var(--muted); }
+
+  .s-amount {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .expert-right .section-label { margin-top: 0; }
+
+  .perks-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 40px;
+    margin-bottom: 44px;
+  }
+
+  .perk-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .perk-icon {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    background: rgba(201,168,76,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .perk-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .perk-desc { font-size: 14px; color: var(--muted); line-height: 1.6; font-weight: 300; }
+
+  /* =================== TESTIMONIALS =================== */
+  .testimonials-section {
+    background: white;
+    padding: 100px 56px;
+  }
+
+  .testimonials-inner { max-width: 1300px; margin: 0 auto; }
+
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .testi-card {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+
+  .testi-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.06); }
+
+  .testi-stars { margin-bottom: 16px; font-size: 16px; letter-spacing: 2px; color: #C9A84C; }
+
+  .testi-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--dark);
+    font-weight: 300;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+
+  .testi-av {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: white;
+    border: 1px solid var(--border);
+  }
+
+  .testi-name { font-size: 14px; font-weight: 600; }
+  .testi-role { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+  /* =================== PRICING =================== */
+  .pricing-section {
+    padding: 100px 56px;
+    max-width: 1300px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 64px;
+    text-align: left;
+  }
+
+  .price-card {
+    background: white;
+    border-radius: 28px;
+    padding: 40px 36px;
+    border: 1.5px solid var(--border);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .price-card.featured {
+    background: var(--dark);
+    border-color: var(--dark);
+  }
+
+  .price-card:hover { transform: translateY(-6px); box-shadow: 0 24px 64px rgba(0,0,0,0.1); }
+
+  .featured-badge {
+    position: absolute;
+    top: 24px; right: 24px;
+    background: var(--orange);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .price-category {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .price-card.featured .price-category { color: rgba(255,255,255,0.4); }
+
+  .price-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+  }
+
+  .price-card.featured .price-name { color: white; }
+
+  .price-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .price-from { font-size: 13px; color: var(--muted); }
+  .price-card.featured .price-from { color: rgba(255,255,255,0.4); }
+
+  .price-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .price-card.featured .price-num { color: white; }
+
+  .price-period {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .price-card.featured .price-period { color: rgba(255,255,255,0.4); }
+
+  .price-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  .price-card.featured .price-divider { background: rgba(255,255,255,0.1); }
+
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+
+  .price-feature {
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+    align-items: flex-start;
+    font-weight: 300;
+  }
+
+  .price-card.featured .price-feature { color: rgba(255,255,255,0.7); }
+
+  .check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(0,201,122,0.15);
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* =================== CTA FINAL =================== */
+  .final-cta {
+    background: var(--orange);
+    padding: 100px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+
+  .final-cta::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+
+  .final-cta h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 800;
+    color: white;
+    letter-spacing: -2px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .final-cta p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 300;
+    margin-bottom: 44px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+  }
+
+  .btn-white {
+    background: white;
+    color: var(--orange);
+    padding: 16px 40px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 16px 48px rgba(0,0,0,0.15); }
+
+  .btn-white-outline {
+    background: transparent;
+    color: white;
+    padding: 16px 40px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 500;
+    border: 2px solid rgba(255,255,255,0.4);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+
+  .btn-white-outline:hover { border-color: white; transform: translateY(-2px); }
+
+  /* =================== FOOTER =================== */
+  footer {
+    background: var(--dark);
+    padding: 64px 56px 40px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 56px;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: white;
+    margin-bottom: 16px;
+  }
+
+  .footer-logo span { color: var(--orange); }
+
+  .footer-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 280px;
+  }
+
+  .footer-col-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+  }
+
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a { text-decoration: none; color: rgba(255,255,255,0.4); font-size: 14px; transition: color 0.2s; font-weight: 300; }
+  .footer-links a:hover { color: white; }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+
+  /* =================== EMAIL FORM =================== */
+  .email-form {
+    display: flex;
+    gap: 10px;
+    max-width: 460px;
+    margin-top: 20px;
+  }
+
+  .email-input {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 13px 20px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .email-input::placeholder { color: rgba(255,255,255,0.3); }
+  .email-input:focus { border-color: var(--orange); }
+
+  .email-submit {
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .email-submit:hover { background: #E8C97A; }
+
+  /* =================== STATS BAR =================== */
+  .stats-bar {
+    background: white;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 56px;
+  }
+
+  .stats-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    text-align: center;
+  }
+
+  .stat-big .num {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, var(--dark), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-big .label { font-size: 14px; color: var(--muted); font-weight: 300; }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-center { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; gap: 40px; }
+    .hero-right { display: none; }
+    .section { padding: 60px 24px; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .cats-section { padding: 60px 24px; }
+    .cats-grid { grid-template-columns: repeat(2, 1fr); }
+    .experts-section { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+    .testimonials-section { padding: 60px 24px; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .pricing-section { padding: 60px 24px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .final-cta { padding: 60px 24px; }
+    .stats-bar { padding: 40px 24px; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    footer { padding: 48px 24px 32px; }
+    .footer-top { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">CALL<span>TOO</span></a>
+  <ul class="nav-center">
+    <li><a href="#comment">Comment ça marche</a></li>
+    <li><a href="#categories">Catégories</a></li>
+    <li><a href="#experts">Devenir expert</a></li>
+    <li><a href="#tarifs">Tarifs</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="#" class="btn-ghost">Se connecter</a>
+    <a href="#" class="btn-orange">Commencer →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="background: var(--cream);">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="dot-green"></span>
+        Experts disponibles maintenant
+      </div>
+      <h1>
+        L'expert dont<br>
+        tu as besoin,<br>
+        <span class="highlight">en visio.</span>
+      </h1>
+      <p class="hero-desc">
+        Mécanicien, comptable, coach, infirmier, prof de guitare… Connecte-toi en visio avec un vrai expert en quelques secondes. Pas de RDV. Pas d'attente. Juste la réponse dont tu as besoin.
+      </p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-main">Trouver un expert ↗</a>
+        <a href="#experts" class="btn-outline">💰 Devenir expert</a>
+      </div>
+      <div class="hero-trust">
+        <div class="avatars-stack">
+          <div class="av">👩</div>
+          <div class="av">👨</div>
+          <div class="av">🧑</div>
+          <div class="av">👩‍🦱</div>
+        </div>
+        <span>+2 400 experts vérifiés · Noté 4.9/5</span>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <!-- FLOATING CARDS -->
+      <div class="float-card float-card-1">
+        <div class="fc-label">Session terminée</div>
+        <div class="fc-val" style="color: var(--green)">+28,50€</div>
+        <div class="fc-sub">Il y a 2 minutes ✓</div>
+      </div>
+
+      <div class="float-card float-card-2">
+        <div class="fc-label">Avis laissé</div>
+        <div class="stars">★★★★★</div>
+        <div class="fc-sub" style="margin-top: 4px">"Exactement ce qu'il me fallait !"</div>
+      </div>
+
+      <!-- PHONE MOCKUP -->
+      <div class="main-card">
+        <div class="card-top">
+          <div class="card-header">
+            <div class="expert-row">
+              <div class="expert-av">🔧</div>
+              <div>
+                <div class="expert-name">Marc D.</div>
+                <div class="expert-job">Mécanicien · 12 ans d'exp.</div>
+              </div>
+            </div>
+            <div class="live-pill">En direct</div>
+          </div>
+
+          <div class="fake-video">
+            <div style="position:relative; display:flex; align-items:center; justify-content:center;">
+              <div class="pulse-ring"></div>
+              <div class="pulse-ring"></div>
+              <div class="video-user">👤</div>
+            </div>
+            <div class="small-cam">🔧</div>
+          </div>
+        </div>
+
+        <div class="card-bottom">
+          <div class="timer-row">
+            <div class="timer">12:34</div>
+            <div class="price-badge">30 min · 25€</div>
+          </div>
+          <div class="controls">
+            <button class="ctrl-btn ctrl-mute">🎙</button>
+            <button class="ctrl-btn ctrl-end">📵</button>
+            <button class="ctrl-btn ctrl-cam">📷</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-big">
+      <div class="num">2 400+</div>
+      <div class="label">Experts vérifiés</div>
+    </div>
+    <div class="stat-big">
+      <div class="num">18 000+</div>
+      <div class="label">Sessions réalisées</div>
+    </div>
+    <div class="stat-big">
+      <div class="num">4.9/5</div>
+      <div class="label">Note moyenne</div>
+    </div>
+    <div class="stat-big">
+      <div class="num">< 3 min</div>
+      <div class="label">Temps de connexion</div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMENT ÇA MARCHE -->
+<section class="section" id="comment">
+  <div class="section-label">Comment ça marche</div>
+  <h2 class="section-title">En 3 étapes,<br>tu as ta réponse.</h2>
+  <p class="section-sub">Pas de formulaire interminable. Pas d'attente. Tu trouves, tu appelles, tu obtiens ta réponse.</p>
+
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-icon" style="background: rgba(201,168,76,0.08)">🔍</div>
+      <div class="step-title">Tu cherches un expert</div>
+      <p class="step-desc">Tape ce dont tu as besoin — mécanicien, comptable, prof de langues, ongulaire… Filtre par catégorie, disponibilité et tarif.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-icon" style="background: rgba(0,201,122,0.08)">📹</div>
+      <div class="step-title">Tu lances la visio</div>
+      <p class="step-desc">Mode Express pour une urgence — l'expert disponible répond en quelques minutes. Mode Planifié pour réserver un créneau à l'avance.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-icon" style="background: rgba(26,111,255,0.08)">✅</div>
+      <div class="step-title">Tu obtiens ta réponse</div>
+      <p class="step-desc">La session se termine, le paiement est automatique, tu laisses un avis. Simple, sécurisé, sans surprise.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CATÉGORIES -->
+<div class="cats-section" id="categories">
+  <div class="cats-inner">
+    <div class="section-label">Catégories d'experts</div>
+    <h2 class="section-title" style="color:white">Un expert pour<br>chaque besoin.</h2>
+    <p class="section-sub">Du dépannage auto au conseil fiscal, trouve l'expertise dont tu as besoin au bon prix.</p>
+
+    <div class="cats-grid">
+      <div class="cat-card">
+        <div class="cat-emoji">🌱</div>
+        <div class="cat-name">Passionné & Étudiant</div>
+        <div class="cat-desc">Langues, musique, aide aux devoirs, hobbies, bricolage du quotidien…</div>
+        <div class="cat-price">
+          <span class="from">Dès</span>
+          <span class="amount">10€</span>
+          <span class="per">/ 30 min</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-emoji">🔧</div>
+        <div class="cat-name">Artisan & Technicien</div>
+        <div class="cat-desc">Mécanicien, électricien, plombier, coiffeur, ongulaire, cuisinier…</div>
+        <div class="cat-price">
+          <span class="from">Dès</span>
+          <span class="amount">20€</span>
+          <span class="per">/ 30 min</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-emoji">🎓</div>
+        <div class="cat-name">Expert Métier</div>
+        <div class="cat-desc">Comptable, infirmier, juriste, coach, journaliste, consultant…</div>
+        <div class="cat-price">
+          <span class="from">Dès</span>
+          <span class="amount">30€</span>
+          <span class="per">/ 30 min</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-emoji">🏆</div>
+        <div class="cat-name">Senior & Dirigeant</div>
+        <div class="cat-desc">Médecin, DRH, directeur, cadre supérieur, 10+ ans d'expérience…</div>
+        <div class="cat-price">
+          <span class="from">Dès</span>
+          <span class="amount">50€</span>
+          <span class="per">/ 30 min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POUR LES EXPERTS -->
+<section class="experts-section" id="experts">
+  <div class="earnings-card">
+    <div class="earnings-title">Tes revenus ce mois-ci</div>
+    <div class="earnings-big">+840€</div>
+    <div class="earnings-sub">12 sessions · 14h de ton temps</div>
+
+    <div class="sessions-list">
+      <div class="session-row">
+        <div class="s-av">👩</div>
+        <div class="s-info">
+          <div class="s-name">Sophie M.</div>
+          <div class="s-time">Aujourd'hui · 45 min</div>
+        </div>
+        <div class="s-amount">+63€</div>
+      </div>
+      <div class="session-row">
+        <div class="s-av">👨‍💼</div>
+        <div class="s-info">
+          <div class="s-name">Thomas R.</div>
+          <div class="s-time">Hier · 30 min</div>
+        </div>
+        <div class="s-amount">+42€</div>
+      </div>
+      <div class="session-row">
+        <div class="s-av">🧑</div>
+        <div class="s-info">
+          <div class="s-name">Leïla K.</div>
+          <div class="s-time">Lundi · 1h</div>
+        </div>
+        <div class="s-amount">+84€</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="expert-right">
+    <div class="section-label">Pour les experts</div>
+    <h2 class="section-title">Monétise ce<br>que tu sais faire.</h2>
+    <p class="section-sub" style="margin-bottom: 0;">Tu as une expertise ? Un savoir-faire ? Transforme-le en revenu complémentaire, depuis chez toi, quand tu veux.</p>
+
+    <ul class="perks-list">
+      <li class="perk-item">
+        <div class="perk-icon">🕐</div>
+        <div>
+          <div class="perk-title">Tu choisis tes horaires</div>
+          <div class="perk-desc">Disponible quand tu veux. Une heure le soir, le week-end, entre deux clients — c'est toi qui décides.</div>
+        </div>
+      </li>
+      <li class="perk-item">
+        <div class="perk-icon">💶</div>
+        <div>
+          <div class="perk-title">Tu fixes ton tarif</div>
+          <div class="perk-desc">Tu définis ton prix dans la fourchette de ta catégorie. On ne te dicte rien.</div>
+        </div>
+      </li>
+      <li class="perk-item">
+        <div class="perk-icon">🔒</div>
+        <div>
+          <div class="perk-title">Paiement sécurisé garanti</div>
+          <div class="perk-desc">L'argent est versé automatiquement après chaque session. Aucune facture à gérer.</div>
+        </div>
+      </li>
+    </ul>
+
+    <a href="#" class="btn-main">Créer mon profil expert →</a>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<div class="testimonials-section">
+  <div class="testimonials-inner">
+    <div style="text-align:center; margin-bottom: 64px;">
+      <div class="section-label" style="justify-content:center">Ils ont essayé</div>
+      <h2 class="section-title">Ce qu'ils en pensent.</h2>
+    </div>
+
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Ma voiture ne démarrait plus un dimanche soir. En 5 minutes j'avais un mécanicien en visio qui m'a guidé pour rebrancher la batterie. Bluffant."</p>
+        <div class="testi-author">
+          <div class="testi-av">👩</div>
+          <div>
+            <div class="testi-name">Camille B.</div>
+            <div class="testi-role">Lyon · Cliente</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Je fais 3 sessions le samedi matin. En 2h je gagne 90€ sans bouger de chez moi. C'est devenu mon café du samedi matin payant."</p>
+        <div class="testi-author">
+          <div class="testi-av">👨</div>
+          <div>
+            <div class="testi-name">Karim L.</div>
+            <div class="testi-role">Comptable · Expert Calltoo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"J'avais besoin d'un conseil juridique rapide avant de signer un bail. 25€ et 30 minutes plus tard j'avais toutes mes réponses. Impossible de trouver moins cher."</p>
+        <div class="testi-author">
+          <div class="testi-av">🧑‍🦱</div>
+          <div>
+            <div class="testi-name">Inès M.</div>
+            <div class="testi-role">Paris · Cliente</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TARIFS -->
+<section class="pricing-section" id="tarifs">
+  <div class="section-label" style="justify-content:center">Tarifs</div>
+  <h2 class="section-title">Simple et transparent.</h2>
+  <p class="section-sub" style="margin: 0 auto 0;">Pas d'abonnement obligatoire. Tu paies uniquement ce que tu utilises.</p>
+
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-category">Passionné & Étudiant</div>
+      <div class="price-name">🌱 Débutant</div>
+      <div class="price-amount">
+        <span class="price-from">Dès</span>
+        <span class="price-num">10€</span>
+        <span class="price-period">/ 30 min</span>
+      </div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li class="price-feature"><span class="check">✓</span>Langues & aide aux devoirs</li>
+        <li class="price-feature"><span class="check">✓</span>Musique & créativité</li>
+        <li class="price-feature"><span class="check">✓</span>Bricolage & hobbies</li>
+        <li class="price-feature"><span class="check">✓</span>Jusqu'à 40€ / heure</li>
+      </ul>
+      <a href="#" class="btn-outline" style="display:block; text-align:center">Trouver un expert →</a>
+    </div>
+
+    <div class="price-card featured">
+      <div class="featured-badge">Le + demandé</div>
+      <div class="price-category">Artisan & Expert Métier</div>
+      <div class="price-name" style="color:white">🔧 Professionnel</div>
+      <div class="price-amount">
+        <span class="price-from">Dès</span>
+        <span class="price-num">20€</span>
+        <span class="price-period">/ 30 min</span>
+      </div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li class="price-feature"><span class="check">✓</span>Mécanicien, électricien, plombier</li>
+        <li class="price-feature"><span class="check">✓</span>Comptable, juriste, coach</li>
+        <li class="price-feature"><span class="check">✓</span>Infirmier, diététicien…</li>
+        <li class="price-feature"><span class="check">✓</span>Jusqu'à 90€ / heure</li>
+      </ul>
+      <a href="#" class="btn-orange" style="display:block; text-align:center; border-radius:14px; padding: 14px;">Trouver un expert →</a>
+    </div>
+
+    <div class="price-card">
+      <div class="price-category">Senior & Dirigeant</div>
+      <div class="price-name">🏆 Expert Senior</div>
+      <div class="price-amount">
+        <span class="price-from">Dès</span>
+        <span class="price-num">50€</span>
+        <span class="price-period">/ 30 min</span>
+      </div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li class="price-feature"><span class="check">✓</span>Médecin, DRH, directeur</li>
+        <li class="price-feature"><span class="check">✓</span>10+ ans d'expérience</li>
+        <li class="price-feature"><span class="check">✓</span>Conseil stratégique</li>
+        <li class="price-feature"><span class="check">✓</span>Jusqu'à 150€ / heure</li>
+      </ul>
+      <a href="#" class="btn-outline" style="display:block; text-align:center">Trouver un expert →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="final-cta">
+  <h2>Prêt à te connecter<br>avec le bon expert ?</h2>
+  <p>Rejoins les 18 000 personnes qui ont déjà trouvé leur réponse sur Calltoo.</p>
+  <div class="cta-btns">
+    <a href="#" class="btn-white">Je cherche un expert →</a>
+    <a href="#" class="btn-white-outline">Devenir expert</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">CALL<span>TOO</span></div>
+      <p class="footer-desc">La première marketplace francophone de conseil en visio. L'expert dont tu as besoin, maintenant.</p>
+      <div style="margin-top: 24px;">
+        <div style="font-size:13px; color:rgba(255,255,255,0.4); margin-bottom: 10px;">Inscris-toi pour être parmi les premiers :</div>
+        <div class="email-form">
+          <input type="email" class="email-input" placeholder="ton@email.fr">
+          <button class="email-submit">Rejoindre →</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Plateforme</div>
+      <ul class="footer-links">
+        <li><a href="#">Trouver un expert</a></li>
+        <li><a href="#">Devenir expert</a></li>
+        <li><a href="#">Comment ça marche</a></li>
+        <li><a href="#">Toutes les catégories</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Entreprise</div>
+      <ul class="footer-links">
+        <li><a href="#">À propos</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Presse</a></li>
+        <li><a href="#">Nous contacter</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="footer-col-title">Légal</div>
+      <ul class="footer-links">
+        <li><a href="#">CGU</a></li>
+        <li><a href="#">Confidentialité</a></li>
+        <li><a href="#">Cookies</a></li>
+        <li><a href="#">Mentions légales</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 Calltoo. Tous droits réservés.</span>
+    <span>Fait avec ❤️ en France 🇫🇷</span>
+  </div>
+</footer>
+
+<script>
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+
+  // Email form
+  document.querySelector('.email-submit').addEventListener('click', () => {
+    const input = document.querySelector('.email-input');
+    if (input.value && input.value.includes('@')) {
+      input.value = '';
+      input.placeholder = '✓ Merci, tu seras parmi les premiers !';
+      input.style.color = 'var(--green)';
+    }
+  });
+
+  // Intersection observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.style.opacity = '1';
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.step-card, .cat-card, .testi-card, .price-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 0.5s ease, transform 0.3s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
